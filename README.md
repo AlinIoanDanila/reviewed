@@ -1,4 +1,4 @@
-# AI Code Reviewer
+# Reviewed
 
 **A local-first Python CLI that reviews Git diffs with an OpenAI model, validates structured findings, and saves reproducible reports.**
 
