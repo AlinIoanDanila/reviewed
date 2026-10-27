@@ -18,6 +18,7 @@ from pathlib import Path
 # Stub external packages so these tests exercise local diff logic only.
 dotenv_stub = types.ModuleType("dotenv")
 dotenv_stub.load_dotenv = lambda *args, **kwargs: None
+dotenv_stub.find_dotenv = lambda *args, **kwargs: ""
 sys.modules.setdefault("dotenv", dotenv_stub)
 openai_stub = types.ModuleType("openai")
 class _OpenAIError(Exception):

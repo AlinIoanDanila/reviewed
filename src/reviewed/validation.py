@@ -31,8 +31,8 @@ REVIEW_SCHEMA = {
 }
 
 
-def validate_review(result: object, diff: str) -> dict:
-	"""Validate the model response and check its file/line references."""
+def validate_review_structure(result: object) -> dict:
+	"""Validate review fields and types without accepting its file/line references."""
 	if not isinstance(result, dict):
 		raise ValueError("Review must be a JSON object.")
 	if set(result) != {"summary", "risk", "findings"}:
@@ -44,7 +44,6 @@ def validate_review(result: object, diff: str) -> dict:
 	findings = result.get("findings")
 	if not isinstance(findings, list):
 		raise ValueError("Findings must be an array.")
-	changed_lines = changed_lines_by_file(diff)
 	required = {"severity", "file", "line", "title", "evidence", "explanation", "recommendation", "confidence"}
 	valid_severities = {"low", "medium", "high", "critical"}
 	valid_confidence = {"low", "medium", "high"}
@@ -63,12 +62,22 @@ def validate_review(result: object, diff: str) -> dict:
 		line = finding["line"]
 		if line is not None and (isinstance(line, bool) or not isinstance(line, int) or line < 1):
 			raise ValueError(f"Finding {index} has an invalid line number.")
+	return result
+
+
+def validate_review(result: object, diff: str) -> dict:
+	"""Validate the model response and check its file/line references."""
+	result = validate_review_structure(result)
+	changed_lines = changed_lines_by_file(diff)
+	for index, finding in enumerate(result["findings"]):
+		line = finding["line"]
 		file = finding["file"]
 		if file not in changed_lines:
 			raise ValueError(f"Finding {index} references a file absent from the diff.")
 		if line is not None and line not in changed_lines[file]:
 			raise ValueError(
-				f"Finding {index} references a line that is not an added line in the diff. "
+				f"Finding {index} ({file}:{line}) references a line that is not an added line in the diff. "
+				f"Valid added lines: {sorted(changed_lines[file])}. "
 				"Use null for a file-level finding."
 			)
 	return result

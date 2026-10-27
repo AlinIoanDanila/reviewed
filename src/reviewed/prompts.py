@@ -15,7 +15,9 @@ Rules:
 - Report at most 5 findings, ordered by severity.
 - Do not report style preferences or speculative nitpicks.
 - Do not invent files, lines, APIs, or behavior.
-- Reference added lines when possible; otherwise use null.
+- A numeric line must be a new-file line number on an added '+' line, never a diff row number.
+- Read new-file line numbers from the '+' range of each @@ hunk header: context and added lines advance it; deleted lines do not.
+- Never cite unchanged context or deleted lines. For deletion-only or file-level findings, use null.
 - If there are no actionable findings, return an empty findings array.
 - Keep each finding concise, with a short explanation and recommendation.
 - The review is advisory; a human must verify every finding.

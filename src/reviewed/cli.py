@@ -6,7 +6,7 @@ import os
 import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 from openai import APIConnectionError, APIStatusError, APITimeoutError, OpenAI, RateLimitError
 
 from .git_diff import MAX_DIFF_CHARS, filter_diff, get_git_diff, get_repo_root, read_diff_file, warn_on_exposed_secret_files
@@ -16,6 +16,7 @@ from .reviewer import build_review_request, call_openai
 from .secret_scan import scan_diff_for_secrets
 
 load_dotenv(DATA_DIR / ".env")
+load_dotenv(find_dotenv(usecwd=True))
 
 
 def main() -> int:
