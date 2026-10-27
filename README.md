@@ -137,6 +137,10 @@ python -B -m unittest discover -s tests -v
 
 Tests stub OpenAI calls and do not make live model requests. Gitleaks integration tests run when Gitleaks is available. Tests that require OS permissions to create symlinks may be skipped in restricted environments.
 
+## Evaluation
+
+Example evaluation: In one run using gpt-6-luna, the reviewer returned 23 findings for a benchmark of 24 seeded bugs and 5 benign edits. All 23 findings passed citation validation. Manual inspection found 23 seeded bugs detected, no actual false positives, and one missed bug: B18 (the unclosed file handle). The automatic matcher reported 22 detections and one false positive because it mismatched two findings in billing.py. This is a single synthetic evaluation, not a general performance guarantee.
+
 ## Contributing
 
 Issues and pull requests are welcome. Please include regression tests for bug fixes and use synthetic data rather than real secrets or proprietary source code in fixtures.
