@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING
 
 from openai import OpenAI
 
-from git_diff import MAX_DIFF_CHARS, filter_diff
-from prompts import get_review_instructions
-from secret_scan import scan_diff_for_secrets
-from validation import REVIEW_SCHEMA, validate_review
+from .git_diff import MAX_DIFF_CHARS, filter_diff
+from .prompts import get_review_instructions
+from .secret_scan import scan_diff_for_secrets
+from .validation import REVIEW_SCHEMA, validate_review
 
 if TYPE_CHECKING:
 	from openai.types.responses.response_create_params import ResponseCreateParamsNonStreaming

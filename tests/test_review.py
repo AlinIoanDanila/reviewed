@@ -35,22 +35,16 @@ openai_stub.RateLimitError = _OpenAIError
 sys.modules.setdefault("openai", openai_stub)
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(SCRIPT_DIR))
+sys.path.insert(0, str(SCRIPT_DIR / "src"))
 
-import cli
-import git_diff
-import reporting
-import review_cache
-import reviewer
-import secret_scan
-import validation
+from reviewed import cli, git_diff, reporting, review_cache, reviewer, secret_scan, validation
 
 
 class DiffParserTests(unittest.TestCase):
 	def test_self_target_includes_extracted_modules(self):
-		self.assertTrue(git_diff.is_in_scope("tools/reviewed/reviewer.py", "self"))
-		self.assertTrue(git_diff.is_in_scope("tools/reviewed/review_cache.py", "self"))
-		self.assertTrue(git_diff.is_in_scope("tools/reviewed/secret_scan.py", "self"))
+		self.assertTrue(git_diff.is_in_scope("tools/reviewed/src/reviewed/reviewer.py", "self"))
+		self.assertTrue(git_diff.is_in_scope("tools/reviewed/src/reviewed/review_cache.py", "self"))
+		self.assertTrue(git_diff.is_in_scope("tools/reviewed/src/reviewed/secret_scan.py", "self"))
 		self.assertTrue(git_diff.is_in_scope("tools/reviewed/tests/test_review.py", "self"))
 
 	def test_modified_file_records_added_line(self):
@@ -321,8 +315,8 @@ class RenameScopeTests(unittest.TestCase):
 
 	def test_cross_scope_renames_are_rejected_in_both_directions(self):
 		for old, new in (
-			("cli.py", "outside.py"),
-			("outside.py", "cli.py"),
+			("src/reviewed/cli.py", "outside.py"),
+			("outside.py", "src/reviewed/cli.py"),
 		):
 			for with_hunk in (False, True):
 				with self.subTest(old=old, new=new, with_hunk=with_hunk):
@@ -331,20 +325,20 @@ class RenameScopeTests(unittest.TestCase):
 						git_diff.filter_diff(diff, "self", warn=False)
 
 	def test_in_scope_rename_is_preserved(self):
-		diff = self.rename_diff("cli.py", "tests/new.py")
+		diff = self.rename_diff("src/reviewed/cli.py", "tests/new.py")
 
 		filtered = git_diff.filter_diff(diff, "self", warn=False)
 
 		self.assertEqual(filtered, diff)
 		self.assertEqual(
 			git_diff.changed_lines_by_file(filtered),
-			{"cli.py": set(), "tests/new.py": {2}},
+			{"src/reviewed/cli.py": set(), "tests/new.py": {2}},
 		)
 
 	def test_cross_scope_diff_file_fails_before_model_or_artifact_creation(self):
 		for old, new in (
-			("cli.py", "outside.py"),
-			("outside.py", "cli.py"),
+			("src/reviewed/cli.py", "outside.py"),
+			("outside.py", "src/reviewed/cli.py"),
 		):
 			with self.subTest(old=old, new=new):
 				with (
@@ -376,8 +370,8 @@ class RenameScopeTests(unittest.TestCase):
 
 	def test_no_renames_output_excludes_outside_content_and_findings(self):
 		for old, new in (
-			("cli.py", "outside.py"),
-			("outside.py", "cli.py"),
+			("src/reviewed/cli.py", "outside.py"),
+			("outside.py", "src/reviewed/cli.py"),
 		):
 			with self.subTest(old=old, new=new):
 				# The deletion/addition representation produced by --no-renames.

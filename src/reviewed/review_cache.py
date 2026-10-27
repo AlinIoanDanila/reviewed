@@ -11,7 +11,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import BinaryIO, Callable, Generator
 
-from validation import validate_review
+from .validation import validate_review
 
 
 def _file_lock_operations(

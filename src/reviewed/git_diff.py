@@ -9,37 +9,20 @@ import subprocess
 import sys
 from pathlib import Path, PurePosixPath
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-REPO_ROOT = SCRIPT_DIR
+REPO_ROOT = Path.cwd()
 MAX_DIFF_CHARS = 55_000
 MAX_DIFF_BYTES = MAX_DIFF_CHARS * 4
 TARGET_PATHS = {
 	# Empty pathspec means the whole repository. This is the portable default.
 	"all": [],
 	"self": [
-		"__init__.py",
-		"cli.py",
-		"git_diff.py",
-		"prompts.py",
-		"reporting.py",
-		"review.py",
-		"reviewer.py",
-		"review_cache.py",
-		"secret_scan.py",
-		"validation.py",
+		"src/reviewed/",
 		"tests/",
+		"pyproject.toml",
 		"requirements.txt",
-		"tools/reviewed/__init__.py",
-		"tools/reviewed/cli.py",
-		"tools/reviewed/git_diff.py",
-		"tools/reviewed/prompts.py",
-		"tools/reviewed/reporting.py",
-		"tools/reviewed/review_cache.py",
-		"tools/reviewed/review.py",
-		"tools/reviewed/reviewer.py",
-		"tools/reviewed/secret_scan.py",
-		"tools/reviewed/validation.py",
+		"tools/reviewed/src/reviewed/",
 		"tools/reviewed/tests/",
+		"tools/reviewed/pyproject.toml",
 		"tools/reviewed/requirements.txt",
 	],
 }

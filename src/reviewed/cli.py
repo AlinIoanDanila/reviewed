@@ -9,14 +9,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import APIConnectionError, APIStatusError, APITimeoutError, OpenAI, RateLimitError
 
-from git_diff import MAX_DIFF_CHARS, filter_diff, get_git_diff, get_repo_root, read_diff_file, warn_on_exposed_secret_files
-from reporting import REPORTS_DIR, make_artifact_paths, write_artifact
-from review_cache import load_cached_review, review_cache_key, review_cache_lock, save_cached_review
-from reviewer import build_review_request, call_openai
-from secret_scan import scan_diff_for_secrets
+from .git_diff import MAX_DIFF_CHARS, filter_diff, get_git_diff, get_repo_root, read_diff_file, warn_on_exposed_secret_files
+from .reporting import DATA_DIR, REPORTS_DIR, make_artifact_paths, write_artifact
+from .review_cache import load_cached_review, review_cache_key, review_cache_lock, save_cached_review
+from .reviewer import build_review_request, call_openai
+from .secret_scan import scan_diff_for_secrets
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-load_dotenv(SCRIPT_DIR / ".env")
+load_dotenv(DATA_DIR / ".env")
 
 
 def main() -> int:

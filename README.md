@@ -49,10 +49,10 @@ Activate the environment:
 source .venv/bin/activate
 ```
 
-Install dependencies:
+Install the package (provides the `reviewed` command; `python -m reviewed` also works):
 
 ```bash
-python -m pip install -r requirements.txt
+python -m pip install -e .
 ```
 
 Install Gitleaks using its official installation instructions and verify:
@@ -61,7 +61,7 @@ Install Gitleaks using its official installation instructions and verify:
 gitleaks version
 ```
 
-Copy `.env.example` to `.env` in the AI Code Reviewer directory, then configure:
+Copy `.env.example` to `~/.reviewed/.env` (or `$REVIEWED_HOME/.env`), then configure:
 
 ```dotenv
 OPENAI_API_KEY=your-api-key
@@ -77,7 +77,7 @@ Run the commands from the Git repository you want to review. You can also specif
 ### Review all changes in the current repository
 
 ```bash
-python /path/to/reviewed/review.py --git worktree
+reviewed --git worktree
 ```
 
 This reviews tracked changes relative to `HEAD` and eligible untracked files. The default target is `all`, so paths across the repository are considered, subject to sensitive-path exclusions and secret scanning.
@@ -85,36 +85,36 @@ This reviews tracked changes relative to `HEAD` and eligible untracked files. Th
 ### Select a repository explicitly
 
 ```bash
-python /path/to/reviewed/review.py --repo /path/to/project --git worktree
+reviewed --repo /path/to/project --git worktree
 ```
 
 ### Other review modes
 
 ```bash
 # Review staged changes
-python /path/to/reviewed/review.py --git staged
+reviewed --git staged
 
 # Review the current branch against a base
-python /path/to/reviewed/review.py --git branch --base origin/main
+reviewed --git branch --base origin/main
 
 # Review a saved Git diff
-python /path/to/reviewed/review.py --diff-file path/to/change.diff
+reviewed --diff-file path/to/change.diff
 
 # Request a fresh model response instead of using the successful cache
-python /path/to/reviewed/review.py --git worktree --refresh
+reviewed --git worktree --refresh
 
 # Review this tool's own source files
-python /path/to/reviewed/review.py --git worktree --target self
+reviewed --git worktree --target self
 
 # Choose an explicit JSON report path (the paired .diff uses the same basename)
-python /path/to/reviewed/review.py --git staged --output reports/review.json
+reviewed --git staged --output reports/review.json
 ```
 
-Run `python /path/to/reviewed/review.py --help` for all options. `--force` is valid only with an explicit `--output` and permits overwriting both the report and its paired diff.
+Run `reviewed --help` for all options. `--force` is valid only with an explicit `--output` and permits overwriting both the report and its paired diff.
 
 ## Output and cache
 
-By default, reports and cache are stored in the AI Code Reviewer installation under `reports/`. The provided `.gitignore` excludes this directory. If you use a shared or system-wide installation, protect that directory because reports and diffs may contain proprietary source code.
+By default, reports and cache are stored under `~/.reviewed/reports/` (override the base directory with `REVIEWED_HOME`). Protect that directory because reports and diffs may contain proprietary source code.
 
 Each review produces a timestamped JSON report and the exact filtered diff sent to the model. Cache entries are written only for successful, validated reviews and are revalidated when read. The cache key includes the repository identity, model request, target, and provider configuration, but not the API key. `--refresh` requests a fresh review. Reports, diffs, and cache entries may contain proprietary source code in plaintext; protect them accordingly.
 

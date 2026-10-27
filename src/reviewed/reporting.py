@@ -1,10 +1,11 @@
 """Persist review reports and their exact input diffs."""
 
+import os
 from datetime import datetime
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-REPORTS_DIR = SCRIPT_DIR / "reports"
+DATA_DIR = Path(os.environ.get("REVIEWED_HOME") or Path.home() / ".reviewed")
+REPORTS_DIR = DATA_DIR / "reports"
 
 
 def write_artifact(path: Path, content: str, *, force: bool) -> None:

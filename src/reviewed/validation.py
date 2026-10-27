@@ -1,6 +1,6 @@
 """Validate structured model reviews against the supplied diff."""
 
-from git_diff import changed_lines_by_file
+from .git_diff import changed_lines_by_file
 
 REVIEW_SCHEMA = {
 	"type": "object",
