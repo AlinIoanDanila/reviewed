@@ -2,7 +2,7 @@
 
 **A local-first Python CLI that reviews Git diffs with an OpenAI model, validates structured findings, and saves reproducible reports.**
 
-AI Code Reviewer is designed to assist—not replace—human review. It filters changes, scans the exact outgoing diff with Gitleaks, validates model-reported files and added lines, and stores the reviewed diff beside its JSON report.
+Reviewed is designed to assist—not replace—human review. It filters changes, scans the exact outgoing diff with Gitleaks, validates model-reported files and added lines, and stores the reviewed diff beside its JSON report.
 
 ## Features
 
